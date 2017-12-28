@@ -1,0 +1,11 @@
+class <%= controller_class_name %>Controller < SimpleController::Base
+  view_path '<%= view_class_path %>'
+  <% if auth.present? %>acts_as_auth_action :<%= auth.downcase %><% end %>
+
+  private
+    def <%= singular_name %>_params
+      params.require(:<%= singular_name %>).permit(
+        <%= attributes_list(attributes_names) %>
+      )
+    end
+end

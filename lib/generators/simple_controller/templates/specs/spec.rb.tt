@@ -1,0 +1,61 @@
+require 'swagger_helper'
+
+<%= singular_name.upcase %>_REF = {
+  type: :object, properties: {
+    <%= singular_name %>: {
+      type: :object, properties: {
+<% resource_class.columns_hash.except('id', 'created_at', 'updated_at').values.each do |column| -%>
+        <%= column.name %>: { type: :<%= column.type %>, description: '' },
+<% end -%>
+      }
+    }
+  }
+}
+
+<%= singular_name.upcase %>_VALUE = FactoryBot.attributes_for(:<%= resource_class.to_s.underscore.sub('/', '_') %>)
+
+RSpec.describe '<%= controller_path %>', type: :request, capture_examples: true, tags: ["<%= controller_class_path.join(' ') %>"] do
+  before :each do
+<% if auth.present? -%>
+    @auth = <%= auth %>.register "auth", "password"
+    @auth_token = <%= auth %>.login "auth", "password"
+<% end -%>
+    @<%= plural_name %> = FactoryBot.create_list(:<%= resource_class.to_s.underscore.sub('/', '_') %>, 5)
+  end
+
+<% @routes.each do | template, path_item | -%>
+  path '<%= template %>' do
+<% if auth.present? -%>
+    parameter '<%= auth %>-Token', in: :header ,type: :string
+    let('<%= auth %>-Token') { @auth_token.token }
+<% end -%>
+<% unless path_item[:params].empty? -%>
+<% path_item[:params].each do |param| -%>
+    parameter '<%= param %>', in: :path, type: :string
+<% end -%>
+<% path_item[:params].each do |param| -%>
+    let(:<%= param %>) { @<%= plural_name %>.first.id }
+<% end -%>
+
+<% end -%>
+<% path_item[:actions].each do | action, details | -%>
+<% next if action == 'put' -%>
+    <%= action %>(summary: '<%= details[:summary] %>') do
+      produces 'application/json'
+      consumes 'application/json'
+
+<% if ['post', 'patch'].include? action -%>
+      parameter :<%= singular_name %>, in: :body, schema: <%=
+singular_name.upcase %>_REF
+      let(:<%= singular_name %>) do
+        { <%= singular_name %>: <%= singular_name.upcase %>_VALUE }
+      end
+<% end -%>
+      response(<%= response_status action %>, description: 'successful') do
+        # it { p JSON.parse(response.body) }
+      end
+    end
+<% end -%>
+  end
+<% end -%>
+end

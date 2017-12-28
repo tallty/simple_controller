@@ -1,5 +1,8 @@
-require "simple_controller/version"
+require 'responders'
+require 'ransack'
+require 'inherited_resources'
 
 module SimpleController
-  # Your code goes here...
+  autoload :VERSION,            'simple_controller/version'
+  autoload :Base,               'simple_controller/base'
 end
