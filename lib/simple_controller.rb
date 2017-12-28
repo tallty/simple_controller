@@ -1,13 +1,9 @@
 require 'rails'
-require 'actionpack'
-require 'activerecord'
-require 'activesupport'
-require 'active_support/dependencies'
-require 'set'
+require 'active_record'
 
+require 'responders'
 require 'ransack'
 require 'inherited_resources'
-require 'responders'
 
 module SimpleController
   autoload :VERSION,            'simple_controller/version'

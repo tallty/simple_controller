@@ -23,7 +23,7 @@ class SimpleController::Base < ::InheritedResources::Base
     @view_class_path
   end
 
-  def collection
-    get_collection_ivar || set_collection_ivar(end_of_association_chain.ransack(params[:q]).result.paginate(page: params[:page], per_page: params[:per_page]))
-  end
+  # def collection
+  #   get_collection_ivar || set_collection_ivar(end_of_association_chain.ransack(params[:q]).result.paginate(page: params[:page], per_page: params[:per_page]))
+  # end
 end
