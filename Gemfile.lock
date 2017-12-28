@@ -4,6 +4,7 @@ PATH
     simple_controller (0.1.0)
       inherited_resources
       ransack
+      responders
       will_paginate (~> 3.1.0)
 
 GEM
