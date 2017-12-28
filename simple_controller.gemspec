@@ -9,9 +9,9 @@ Gem::Specification.new do |spec|
   spec.authors       = ["liyijie"]
   spec.email         = ["liyijie825@gmail.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because RubyGems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = %q{ Generate controller, view, swagger rspec quit simple. }
+  spec.description   = %q{ Generate controller, view, swagger rspec quit simple. }
+  spec.homepage      = "http://www.tallty.com"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
@@ -32,5 +32,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_dependency "ransack"
+  spec.add_dependency "inherited_resources"
+  spec.add_dependency "will_paginate", '~> 3.1.0'
 end
