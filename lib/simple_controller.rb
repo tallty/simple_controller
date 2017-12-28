@@ -7,5 +7,5 @@ require 'inherited_resources'
 
 module SimpleController
   autoload :VERSION,            'simple_controller/version'
-  autoload :Base,               'simple_controller/base'
+  autoload :BaseController,               'simple_controller/base_controller'
 end
