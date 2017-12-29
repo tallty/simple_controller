@@ -9,7 +9,7 @@ class SimpleControllerGenerator < Rails::Generators::NamedBase
   class_option 'no-swagger', type: :boolean, desc: "Do not generate swagger spec file"
 
   def setup
-    @routes = RSpec::Rails::Swagger::RouteParser.new(controller_path).routes
+    @routes = RSpec::Rails::Swagger::RouteParser.new(controller_path.sub(/^\//, '')).routes
   end
 
   def create_controller_files
