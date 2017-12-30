@@ -15,20 +15,21 @@ class SimpleController::BaseController < ::InheritedResources::Base
 
   protected
 
-  mattr_accessor :view_class_path
-
   def self.view_path path
-    self.view_class_path = path
+    @view_class_path = path
   end
 
   def view_path
-    self.class.view_class_path ||= begin
-      controller_class_path = controller_path.split "/"
-      if controller_class_path.size > 1
-        File.join controller_class_path[0], controller_class_path[-1]
-      else
-        controller_class_path[-1]
-      end
+    self.class.instance_variable_get(:@view_class_path) ||
+      self.class.instance_variable_set(:@view_class_path, extract_view_path)
+  end
+
+  def extract_view_path
+    controller_class_path = controller_path.split "/"
+    if controller_class_path.size > 1
+      File.join controller_class_path[0], controller_class_path[-1]
+    else
+      controller_class_path[-1]
     end
   end
 
