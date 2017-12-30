@@ -15,12 +15,21 @@ class SimpleController::BaseController < ::InheritedResources::Base
 
   protected
 
+  mattr_accessor :view_class_path
+
   def self.view_path path
-    @view_class_path = path
+    self.view_class_path = path
   end
 
-  def self.view_class_path
-    @view_class_path
+  def view_path
+    self.class.view_class_path ||= begin
+      controller_class_path = controller_path.split "/"
+      if controller_class_path.size > 1
+        File.join controller_class_path[0], controller_class_path[-1]
+      else
+        controller_class_path[-1]
+      end
+    end
   end
 
   def collection
