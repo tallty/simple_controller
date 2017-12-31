@@ -15,12 +15,19 @@ class SimpleController::BaseController < ::InheritedResources::Base
 
   protected
 
-  def self.set_view_path path
-    @view_path = path
-  end
+  class << self
+    def view_path
+      @view_path
+    end
 
-  def self.view_path
-    @view_path
+    def defaults(options)
+      set_view_path options.delete(:view_path)
+      super(options)
+    end
+
+    def set_view_path path
+      @view_path = path
+    end
   end
 
   def view_path

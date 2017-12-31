@@ -1,4 +1,4 @@
-json.current_page @<%= plural_name %>.current_page
-json.total_page @<%= plural_name %>.total_pages
+json.current_page @<%= resource_plural %>.current_page
+json.total_page @<%= resource_plural %>.total_pages
 
-json.<%= plural_name %> @<%= plural_name %>, partial: '<%= view_class_path %>/simple', as: :<%= singular_name %>
+json.<%= resource_plural %> @<%= resource_plural %>, partial: '<%= view_path %>/simple', as: :<%= resource_singular %>

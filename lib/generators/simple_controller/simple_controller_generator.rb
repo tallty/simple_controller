@@ -21,7 +21,7 @@ class SimpleControllerGenerator < Rails::Generators::NamedBase
   def copy_view_files
     %w(index show _single _simple _detail).each do |view|
       filename = filename_with_extensions(view)
-      template "views/#{filename}", File.join('app/views', view_class_path, filename)
+      template "views/#{filename}", File.join('app/views', view_path, filename)
     end
   end
 
@@ -33,7 +33,7 @@ class SimpleControllerGenerator < Rails::Generators::NamedBase
 
   protected
 
-  def view_class_path
+  def view_path
     return options.view if options.view.present?
     if controller_class_path.size > 1
       File.join controller_class_path[0], plural_name
@@ -101,6 +101,14 @@ class SimpleControllerGenerator < Rails::Generators::NamedBase
       nil
     end
     @resource_class
+  end
+
+  def resource_plural
+    resource_class&.model_name&.plural
+  end
+
+  def resource_singular
+    resource_class&.model_name&.singular
   end
 
   def attributes_names

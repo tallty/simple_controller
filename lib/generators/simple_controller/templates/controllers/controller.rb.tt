@@ -1,10 +1,15 @@
 class <%= controller_class_name %>Controller < SimpleController::BaseController
-  set_view_path '<%= view_class_path %>'
-  <% if auth.present? %>acts_as_auth_action :<%= auth.downcase %><% end %>
+  defaults(
+    resource_class: <%= resource_class %>,
+    collection_name: '<%= resource_plural %>',
+    instance_name: '<%= resource_singular %>',
+    view_path: '<%= view_path %>'
+  )
+<% if auth.present? %>acts_as_auth_action :<%= auth.downcase %><% end -%>
 
   private
-    def <%= singular_name %>_params
-      params.require(:<%= singular_name %>).permit(
+    def <%= resource_singular %>_params
+      params.require(:<%= resource_singular %>).permit(
         <%= attributes_list(attributes_names) %>
       )
     end

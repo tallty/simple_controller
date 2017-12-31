@@ -1,1 +1,1 @@
-json.extract! <%= singular_name %>, <%= attributes_list_with_timestamps %>
+json.extract! <%= resource_singular %>, <%= attributes_list_with_timestamps %>
