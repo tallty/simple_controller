@@ -15,7 +15,7 @@ class SimpleController::BaseController < ::InheritedResources::Base
 
   protected
 
-  def self.view_path= path
+  def self.set_view_path path
     @view_path = path
   end
 

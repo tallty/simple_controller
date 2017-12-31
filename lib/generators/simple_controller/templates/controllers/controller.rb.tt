@@ -1,5 +1,5 @@
 class <%= controller_class_name %>Controller < SimpleController::BaseController
-  view_path = '<%= view_class_path %>'
+  set_view_path '<%= view_class_path %>'
   <% if auth.present? %>acts_as_auth_action :<%= auth.downcase %><% end %>
 
   private
