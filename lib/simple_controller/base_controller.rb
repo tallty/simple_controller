@@ -2,15 +2,15 @@ class SimpleController::BaseController < ::InheritedResources::Base
   respond_to :json
 
   def index
-    index!( { template: "#{self.class.view_class_path}/index" } )
+    index!( { template: "#{self.class.view_path}/index" } )
   end
 
   def show
-    show!( { template: "#{self.class.view_class_path}/show" } )
+    show!( { template: "#{self.class.view_path}/show" } )
   end
 
   def create
-    create!( { template: "#{self.class.view_class_path}/show", status: 201 } )
+    create!( { template: "#{self.class.view_path}/show", status: 201 } )
   end
 
   protected
