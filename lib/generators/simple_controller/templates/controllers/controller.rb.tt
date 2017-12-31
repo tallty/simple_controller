@@ -5,7 +5,9 @@ class <%= controller_class_name %>Controller < SimpleController::BaseController
     instance_name: '<%= resource_singular %>',
     view_path: '<%= view_path %>'
   )
-<% if auth.present? %>acts_as_auth_action :<%= auth.downcase %><% end -%>
+<% if auth.present? %>
+  acts_as_auth_action :<%= auth.downcase %>
+<% end -%>
 
   private
     def <%= resource_singular %>_params
