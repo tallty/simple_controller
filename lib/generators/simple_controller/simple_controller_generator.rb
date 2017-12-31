@@ -10,6 +10,7 @@ class SimpleControllerGenerator < Rails::Generators::NamedBase
 
   def setup
     @routes = RSpec::Rails::Swagger::RouteParser.new(controller_path.sub(/^\//, '')).routes
+    p "Warning!! Resource is not exist, CHECK & regenerate after you have configurate the model and routes already" if resource_class&.columns_hash.blank?
   end
 
   def create_controller_files

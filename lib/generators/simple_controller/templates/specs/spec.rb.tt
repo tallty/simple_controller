@@ -4,8 +4,10 @@ require 'swagger_helper'
   type: :object, properties: {
     <%= singular_name %>: {
       type: :object, properties: {
+<% if resource_class&.columns_hash.present? -%>
 <% resource_class.columns_hash.except('id', 'created_at', 'updated_at').values.each do |column| -%>
         <%= column.name %>: { type: :<%= column.type %>, description: '' },
+<% end -%>
 <% end -%>
       }
     }
