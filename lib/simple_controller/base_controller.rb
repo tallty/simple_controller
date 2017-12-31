@@ -15,13 +15,17 @@ class SimpleController::BaseController < ::InheritedResources::Base
 
   protected
 
-  def self.view_path path
-    @view_class_path = path
+  def self.view_path= path
+    @view_path = path
+  end
+
+  def self.view_path
+    @view_path
   end
 
   def view_path
-    self.class.instance_variable_get(:@view_class_path) ||
-      self.class.instance_variable_set(:@view_class_path, extract_view_path)
+    self.class.instance_variable_get(:@view_path) ||
+      self.class.instance_variable_set(:@view_path, extract_view_path)
   end
 
   def extract_view_path
