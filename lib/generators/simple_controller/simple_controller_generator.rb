@@ -80,11 +80,14 @@ class SimpleControllerGenerator < Rails::Generators::NamedBase
     # Second priority is the top namespace model, e.g. EngineName::Article for EngineName::Admin::ArticlesController
     @resource_class ||= begin
       namespaced_classes = controller_class_name.split('::')
-      namespaced_class = [namespaced_classes.first, namespaced_classes.last].join('::').singularize
+      namespaced_classes.delete_at(1)
+      namespaced_class = namespaced_classes.join('::').singularize
       namespaced_class.constantize
     rescue NameError
       nil
     end
+
+
 
     # Third priority the camelcased c, i.e. UserGroup
     @resource_class ||= begin
