@@ -35,7 +35,9 @@ class SimpleControllerGenerator < Rails::Generators::NamedBase
 
   def view_path
     return options.view if options.view.present?
-    if controller_class_path.size > 1
+    if resource_collection.present?
+      resource_collection
+    elsif controller_class_path.size > 1
       File.join controller_class_path[0], plural_name
     else
       plural_name
@@ -109,6 +111,10 @@ class SimpleControllerGenerator < Rails::Generators::NamedBase
 
   def resource_singular
     resource_class&.model_name&.singular
+  end
+
+  def resource_collection
+    resource_class&.model_name&.collection
   end
 
   def attributes_names
