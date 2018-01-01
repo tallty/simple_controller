@@ -21,7 +21,8 @@ class SimpleController::BaseController < ::InheritedResources::Base
     end
 
     def defaults(options)
-      set_view_path options.delete(:view_path)
+      view_path = options.delete(:view_path)
+      set_view_path view_path if view_path.present?
       super(options)
     end
 
