@@ -23,7 +23,8 @@ RSpec.describe '<%= controller_path %>', type: :request, capture_examples: true,
     @auth = <%= auth %>.register "auth", "password"
     @auth_token = <%= auth %>.login "auth", "password"
 <% end -%>
-    @<%= resource_plural %> = FactoryBot.create_list(:<%= resource_singular %>, 5)
+    @entity_count = 5
+    @<%= resource_plural %> = FactoryBot.create_list(:<%= resource_singular %>, @entity_count)
   end
 
 <% @routes.each do | template, path_item | -%>
@@ -37,7 +38,12 @@ RSpec.describe '<%= controller_path %>', type: :request, capture_examples: true,
     parameter '<%= param %>', in: :path, type: :string
 <% end -%>
 <% path_item[:params].each do |param| -%>
+<% if param == 'id' -%>
     let(:<%= param %>) { @<%= resource_plural %>.first.id }
+<% elsif param.end_with? '_id' -%>
+<%  model_name = param.sub('_id', '') -%>
+    let(:<%= param %>) { @<%= model_name %>.id }
+<% end -%>
 <% end -%>
 
 <% end -%>
@@ -55,7 +61,30 @@ resource_singular.upcase %>_REF
       end
 <% end -%>
       response(<%= response_status action %>, description: 'successful') do
-        # it { p JSON.parse(response.body) }
+<% if details[:summary].start_with?("create") -%>
+        it {
+          body = JSON.parse(response.body)
+<% attributes_names.each do |attr| -%>
+          expect(body['<%= attr %>']).to eq <%= resource_singular.upcase %>_VALUE[:<%= attr %>]
+<% end -%>
+        }
+<% elsif details[:summary].start_with?("list") -%>
+        it {
+          body = JSON.parse(response.body)
+          expect(body['<%= resource_plural %>'].count).to eq @entity_count
+        }
+<% elsif details[:summary].start_with?("delete") -%>
+        it {
+          expect(<%= resource_class %>.count).to eq(@entity_count-1)
+        }
+<% elsif details[:summary].start_with?("show") -%>
+        it {
+          body = JSON.parse(response.body)
+<% attributes_names.each do |attr| -%>
+          expect(body['<%= attr %>']).to eq <%= resource_singular.upcase %>_VALUE[:<%= attr %>]
+<% end -%>
+        }
+<% end -%>
       end
     end
 <% end -%>

@@ -82,7 +82,8 @@ class SimpleControllerGenerator < Rails::Generators::NamedBase
       namespaced_classes = controller_class_name.split('::')
       namespaced_classes.delete_at(1)
       namespaced_class = namespaced_classes.join('::').singularize
-      namespaced_class.constantize
+      resource_class = namespaced_class.constantize
+      raise NameError if resource_class.is_a? Module
     rescue NameError
       nil
     end
