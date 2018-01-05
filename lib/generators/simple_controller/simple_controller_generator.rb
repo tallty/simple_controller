@@ -97,6 +97,15 @@ class SimpleControllerGenerator < Rails::Generators::NamedBase
       nil
     end
 
+    # Second priority is the top namespace model, e.g. EngineName::Article for EngineName::Admin::ArticlesController
+    @resource_class ||= begin
+      namespaced_classes = controller_class_name.split('::')
+      namespaced_class = namespaced_classes[-1].singularize
+      namespaced_class.constantize
+    rescue NameError
+      nil
+    end
+
     # Otherwise use the Group class, or fail
     @resource_class ||= begin
       class_name = controller_class_name.classify
