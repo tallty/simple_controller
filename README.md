@@ -62,7 +62,7 @@ Or:
 
 ```ruby
 class ProjectsController < SimpleController::BaseController
-  actions :all, :except => [ :edit, :update, :destroy ]
+  actions :all, except: [ :edit, :update, :destroy ]
 end
 ```
 
@@ -87,8 +87,7 @@ resource is a `User`:
 
 ```ruby
 class AccountsController < SimpleController::BaseController
-  defaults :resource_class => User, :collection_name => 'users', :instance_name
-=> 'user'
+  defaults resource_class: User, collection_name: 'users', instance_name: 'user'
 end
 ```
 
@@ -101,7 +100,7 @@ different route prefix you can do the following:
 
 ```ruby
 class Administrators::PeopleController < SimpleController::BaseController
-  defaults :route_prefix => 'admin'
+  defaults route_prefix: 'admin'
 end
 ```
 
@@ -118,13 +117,22 @@ class ProjectsController < SimpleController::BaseController
   protected
     def collection
       get_collection_ivar ||
-set_collection_ivar(end_of_association_chain.paginate(:page => params[:page]))
+set_collection_ivar(end_of_association_chain.paginate(page: params[:page]))
     end
 end
 ```
 
 The `end_of_association_chain` returns your resource after nesting all
 associations and scopes (more about this below).
+
+The `after_association_chain` add some scope or relation codes for the
+`end_of_association_chain`:
+
+```ruby
+  def after_association_chain association
+    association.top  #top is the scope
+  end
+```
 
 SimpleController also introduces another method called `begin_of_association_chain`.
 It's mostly used when you want to create resources based on the `@current_user` and
@@ -191,7 +199,7 @@ would with flash):
 ```ruby
 class ProjectsController < SimpleController::BaseController
   def create
-    create!(:notice => "Dude! Nice job creating that project.")
+    create!(notice: "Dude! Nice job creating that project.")
   end
 end
 ```
@@ -201,7 +209,7 @@ You can still pass the block to change the redirect, as mentioned above:
 ```ruby
 class ProjectsController < SimpleController::BaseController
   def create
-    create!(:notice => "Dude! Nice job creating that project.") { root_url }
+    create!(notice: "Dude! Nice job creating that project.") { root_url }
   end
 end
 ```
@@ -290,7 +298,7 @@ Example:
 ```ruby
 class ButtonsController < SimpleController::BaseController
   belongs_to :window
-  actions :all, :except => [:show, :index]
+  actions :all, except: [:show, :index]
 end
 ```
 
@@ -330,7 +338,7 @@ customize how SimpleController find your projects:
 
 ```ruby
 class TasksController < SimpleController::BaseController
-  belongs_to :project, :finder => :find_by_title!, :param => :project_title
+  belongs_to :project, finder: :find_by_title!, param: :project_title
 end
 ```
 
@@ -356,7 +364,7 @@ blocks:
 
 ```ruby
 class CommentsController < SimpleController::BaseController
-  belongs_to :project, :finder => :find_by_title!, :param => :project_title do
+  belongs_to :project, finder: :find_by_title!, param: :project_title do
     belongs_to :task
   end
 end
@@ -381,7 +389,7 @@ use polymorphism:
 
 ```ruby
 class CommentsController < SimpleController::BaseController
-  belongs_to :task, :file, :message, :polymorphic => true
+  belongs_to :task, :file, :message, polymorphic: true
   # polymorphic_belongs_to :task, :file, :message
 end
 ```
@@ -391,7 +399,7 @@ You can even use it with nested resources:
 ```ruby
 class CommentsController < SimpleController::BaseController
   belongs_to :project do
-    belongs_to :task, :file, :message, :polymorphic => true
+    belongs_to :task, :file, :message, polymorphic: true
   end
 end
 ```
@@ -425,7 +433,7 @@ doing:
 
 ```ruby
 class CommentsController < SimpleController::BaseController
-  belongs_to :task, :file, :message, :optional => true
+  belongs_to :task, :file, :message, optional: true
   # optional_belongs_to :task, :file, :message
 end
 ```
@@ -462,7 +470,7 @@ give the
 
 ```ruby
 class ManagersController < SimpleController::BaseController
-  defaults :singleton => true
+  defaults singleton: true
   belongs_to :project
   # singleton_belongs_to :project
 end
@@ -475,9 +483,9 @@ declare it separately
 
 ```ruby
 class WorkersController < SimpleController::BaseController
-  #defaults :singleton => true #if you have only single worker
+  #defaults singleton: true #if you have only single worker
   belongs_to :project
-  belongs_to :manager, :singleton => true
+  belongs_to :manager, singleton: true
 end
 ```
 
@@ -542,7 +550,7 @@ Those urls helpers also accepts a hash as options, just as in named routes.
 
 ```ruby
 # /projects/1/tasks
-collection_url(:page => 1, :limit => 10) #=> /projects/1/tasks?page=1&limit=10
+collection_url(page: 1, limit: 10) #=> /projects/1/tasks?page=1&limit=10
 ```
 
 In polymorphic cases, you can also give the parent as parameter to
@@ -559,7 +567,7 @@ controller:
 
 ```ruby
 class ButtonsController < SimpleController::BaseController
-  custom_actions :resource => :delete, :collection => :search
+  custom_actions resource: :delete, collection: :search
 end
 ```
 
