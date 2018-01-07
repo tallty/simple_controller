@@ -1,23 +1,21 @@
 require 'swagger_helper'
 
-<%= resource_singular.upcase %>_REF = {
-  type: :object, properties: {
-    <%= resource_singular %>: {
-      type: :object, properties: {
-<% if resource_class&.columns_hash.present? -%>
-<% resource_class.columns_hash.except('id', 'created_at', 'updated_at').values.each do |column| -%>
-        <%= column.name %>: { type: :<%= column.type %>, description: '' },
-<% end -%>
-<% end -%>
+RSpec.describe '<%= controller_path %>', type: :request, capture_examples: true, tags: ["<%= controller_class_path.join(' ') %>"] do
+  <%= resource_singular %>_ref = {
+    type: :object, properties: {
+      <%= resource_singular %>: {
+        type: :object, properties: {
+  <% if resource_class&.columns_hash.present? -%>
+  <% resource_class.columns_hash.except('id', 'created_at', 'updated_at').values.each do |column| -%>
+          <%= column.name %>: { type: :<%= column.type %>, description: '' },
+  <% end -%>
+  <% end -%>
+        }
       }
     }
   }
-}
+  <%= resource_singular %>_value = FactoryBot.attributes_for(:<%= resource_singular %>)
 
-<%= resource_singular.upcase %>_VALUE = FactoryBot.attributes_for(:<%=
-resource_singular %>)
-
-RSpec.describe '<%= controller_path %>', type: :request, capture_examples: true, tags: ["<%= controller_class_path.join(' ') %>"] do
   before :each do
 <% if auth.present? -%>
     @auth = <%= auth %>.register "auth", "password"
@@ -55,9 +53,9 @@ RSpec.describe '<%= controller_path %>', type: :request, capture_examples: true,
 
 <% if ['post', 'patch'].include? action -%>
       parameter :<%= resource_singular %>, in: :body, schema: <%=
-resource_singular.upcase %>_REF
+resource_singular %>_ref
       let(:<%= resource_singular %>) do
-        { <%= resource_singular %>: <%= resource_singular.upcase %>_VALUE }
+        { <%= resource_singular %>: <%= resource_singular %>_value }
       end
 <% end -%>
       response(<%= response_status action %>, description: 'successful') do
@@ -65,7 +63,7 @@ resource_singular.upcase %>_REF
         it {
           body = JSON.parse(response.body)
 <% attributes_names.each do |attr| -%>
-          expect(body['<%= attr %>']).to eq <%= resource_singular.upcase %>_VALUE[:<%= attr %>]
+          expect(body['<%= attr %>']).to eq <%= resource_singular %>_value[:<%= attr %>]
 <% end -%>
         }
 <% elsif details[:summary].start_with?("list") -%>
@@ -81,7 +79,7 @@ resource_singular.upcase %>_REF
         it {
           body = JSON.parse(response.body)
 <% attributes_names.each do |attr| -%>
-          expect(body['<%= attr %>']).to eq <%= resource_singular.upcase %>_VALUE[:<%= attr %>]
+          expect(body['<%= attr %>']).to eq <%= resource_singular %>_value[:<%= attr %>]
 <% end -%>
         }
 <% end -%>
