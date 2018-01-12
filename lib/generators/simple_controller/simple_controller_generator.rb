@@ -83,12 +83,11 @@ class SimpleControllerGenerator < Rails::Generators::NamedBase
       namespaced_classes.delete_at(1)
       namespaced_class = namespaced_classes.join('::').singularize
       resource_class = namespaced_class.constantize
-      raise NameError if resource_class.is_a? Module
+      raise NameError if resource_class.instance_of? Module
+      resource_class
     rescue NameError
       nil
     end
-
-
 
     # Third priority the camelcased c, i.e. UserGroup
     @resource_class ||= begin
