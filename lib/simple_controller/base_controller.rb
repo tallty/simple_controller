@@ -53,7 +53,7 @@ class SimpleController::BaseController < ::InheritedResources::Base
     get_collection_ivar || set_collection_ivar(
       after_association_chain(end_of_association_chain).ransack(
         params[:q]
-      ).result.paginate(
+      ).result.distinct.paginate(
         page: params[:page], per_page: params[:per_page]
       )
     )
