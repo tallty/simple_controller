@@ -22,7 +22,7 @@ RSpec.describe '<%= controller_path %>', type: :request, capture_examples: true,
     @auth_token = <%= auth %>.login "auth", "password"
 <% end -%>
     @entity_count = 5
-    @<%= resource_plural %> = FactoryBot.create_list(:<%= resource_singular %>, @entity_count)
+    @<%= resource_plural %> = create_list(:<%= resource_singular %>, @entity_count)
   end
 
 <% @routes.each do | template, path_item | -%>

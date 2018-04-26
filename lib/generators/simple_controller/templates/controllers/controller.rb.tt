@@ -1,17 +1,14 @@
 class <%= controller_class_name %>Controller < SimpleController::BaseController
-  defaults(
-    resource_class: <%= resource_class %>,
-    collection_name: '<%= resource_plural %>',
-    instance_name: '<%= resource_singular %>',
-    view_path: '<%= view_path %>'
-  )
+  base_resources: <%= resource_class %>,
+  view_path: '<%= view_path %>'
+
 <% if auth.present? %>
   acts_as_auth_action :<%= auth.downcase %>
 <% end -%>
 
   private
-    def <%= resource_singular %>_params
-      params.require(:<%= resource_singular %>).permit(
+    def resource_params
+      super.permit(
         <%= attributes_list(attributes_names) %>
       )
     end

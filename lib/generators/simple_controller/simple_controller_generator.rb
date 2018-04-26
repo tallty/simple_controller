@@ -54,7 +54,7 @@ class SimpleControllerGenerator < Rails::Generators::NamedBase
 
   def response_status action
     case action
-    when 'get'
+    when 'get', 'put', 'patch'
       200
     when 'post'
       201
