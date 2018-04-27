@@ -58,8 +58,8 @@ class SimpleController::BaseController < ::InheritedResources::Base
   end
 
   def collection
-    association = super
-    association = after_association_chain(association)
-    ransack_paginate(association)
+    get_collection_ivar || set_collection_ivar(
+      ransack_paginate(after_association_chain(end_of_association_chain))
+    )
   end
 end
