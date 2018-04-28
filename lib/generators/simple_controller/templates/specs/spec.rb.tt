@@ -7,10 +7,10 @@ RSpec.describe '<%= controller_path %>', type: :request, capture_examples: true,
         type: :object, properties: {
   <% if resource_class&.columns_hash.present? -%>
   <% resource_class.columns_hash.except('id', 'created_at', 'updated_at').values.each do |column| -%>
-          <%= column.name %>: { type: :<%= column.type %>, description: '' },
+        <%= column.name %>: { type: :<%= column.type %>, description: '' },
   <% end -%>
   <% end -%>
-        }
+      }
       }
     }
   }
@@ -18,18 +18,18 @@ RSpec.describe '<%= controller_path %>', type: :request, capture_examples: true,
 
   before :each do
 <% if auth.present? -%>
-    @auth = <%= auth %>.register "auth", "password"
-    @auth_token = <%= auth %>.login "auth", "password"
+    @<%= auth_variable %> = <%= auth %>.register "<%= auth %>", "password"
+    @<%= auth_variable %>_token = <%= auth %>.login "<%= auth %>", "password"
 <% end -%>
-    @entity_count = 5
-    @<%= resource_plural %> = create_list(:<%= resource_singular %>, @entity_count)
+    @default_scope = <%= resource_class %>
+    @<%= resource_plural %> = create_list(:<%= resource_singular %>, 5)
+    @entity_count = @default_scope.count
   end
-
 <% @routes.each do | template, path_item | -%>
   path '<%= template %>' do
 <% if auth.present? -%>
     parameter '<%= auth %>-Token', in: :header ,type: :string
-    let('<%= auth %>-Token') { @auth_token.token }
+    let('<%= auth %>-Token') { @<%= auth_variable %>_token.token }
 <% end -%>
 <% unless path_item[:params].empty? -%>
 <% path_item[:params].each do |param| -%>
@@ -43,7 +43,6 @@ RSpec.describe '<%= controller_path %>', type: :request, capture_examples: true,
     let(:<%= param %>) { @<%= model_name %>.id }
 <% end -%>
 <% end -%>
-
 <% end -%>
 <% path_item[:actions].each do | action, details | -%>
 <% next if action == 'put' -%>
@@ -58,6 +57,7 @@ resource_singular %>_ref
         { <%= resource_singular %>: <%= resource_singular %>_value }
       end
 <% end -%>
+
       response(<%= response_status action %>, description: 'successful') do
 <% if details[:summary].start_with?("create") -%>
         it {
@@ -73,7 +73,7 @@ resource_singular %>_ref
         }
 <% elsif details[:summary].start_with?("delete") -%>
         it {
-          expect(<%= resource_class %>.count).to eq(@entity_count-1)
+          expect(@default_scope.count).to eq(@entity_count - 1)
         }
 <% elsif details[:summary].start_with?("show") -%>
         it {
@@ -87,5 +87,6 @@ resource_singular %>_ref
     end
 <% end -%>
   end
+
 <% end -%>
 end

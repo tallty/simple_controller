@@ -52,6 +52,10 @@ class SimpleControllerGenerator < Rails::Generators::NamedBase
     options.auth&.camelcase if options.auth.present?
   end
 
+  def auth_variable
+    auth.parameterize(separator: "_")
+  end
+  
   def response_status action
     case action
     when 'get', 'put', 'patch'
@@ -142,10 +146,10 @@ class SimpleControllerGenerator < Rails::Generators::NamedBase
   end
 
   def attributes_list_with_timestamps
-    attributes_list(%w(id created_at updated_at) + attributes_names)
+    attributes_list(%w(id) + attributes_names + %w(created_at updated_at))
   end
 
   def attributes_list(attributes = attributes_names)
-    attributes.map { |a| ":#{a}"} * ', '
+    attributes.map { |a| ":#{a}" } * ', '
   end
 end

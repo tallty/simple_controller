@@ -1,12 +1,12 @@
 class <%= controller_class_name %>Controller < SimpleController::BaseController
-  base_resources: <%= resource_class %>,
-  view_path: '<%= view_path %>'
-
+  base_resources <%= resource_class %>
+  view_path '<%= view_path %>'
 <% if auth.present? %>
   acts_as_auth_action :<%= auth.downcase %>
 <% end -%>
 
   private
+  
     def resource_params
       super.permit(
         <%= attributes_list(attributes_names) %>

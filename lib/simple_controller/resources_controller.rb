@@ -9,7 +9,7 @@ module SimpleController
       def base_resources model_or_relation
         @_base_resources = model_or_relation
       end
-      
+
       def klass
         _base_resources < ActiveRecord::Base ? _base_resources : _base_resources.klass
       end
@@ -56,7 +56,7 @@ module SimpleController
     
     respond_to :json
     
-    rescue_from Errors::BaseError do |e|
+    rescue_from SimpleController::Error do |e|
       Rails.logger.error e.message
       e.backtrace.each { |line| Rails.logger.info line }
       render json: { error: e.message, code: e.code }, status: e.status
@@ -87,7 +87,6 @@ module SimpleController
 
     def create
       @resource = default_resources.create!(resource_params)
-      # head 201
       render_show status: 201
     end
 
@@ -103,7 +102,7 @@ module SimpleController
     
     attr_accessor :base_resources, :view_path
 
-    def initialize 
+    def initialize
       super
       @base_resources = self.class._base_resources
       @view_path      = self.class._view_path
@@ -141,7 +140,7 @@ module SimpleController
       end
 
       def default_resources
-        default_query(try_parents(base_resources))
+        try_parents(default_query(base_resources))
       end
 
       def resource_key
@@ -176,7 +175,7 @@ module SimpleController
       end
 
       def render_index status: 200
-        respond_with @resources, template: "#{view_path}/show", status: status
+        respond_with @resources, template: "#{view_path}/index", status: status
       end
   end
 end
