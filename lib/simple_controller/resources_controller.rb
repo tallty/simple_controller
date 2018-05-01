@@ -52,7 +52,11 @@ module SimpleController
       end
     end
 
-    before_action :set_resource, only: [:show, :update, :destroy]
+    # before_action :set_resource, only: [:show, :update, :destroy]
+    
+    # if you set :before_action at the same method again, you would rewrite the old condition ( :except or :only )
+    # so if you wand to add an collection action, you need to set the callback again
+    before_action :set_resource, except: [:index, :create]
     
     respond_to :json
     
