@@ -81,7 +81,7 @@ module SimpleController
     def index
       page = params[:page] || 1
       per_page = params[:per_page] || 10
-      @resources = index_resources.ransack(params[:q]).result.distinct.paginate(page: page, per_page: per_page)
+      @resources = index_resources.paginate(page: page, per_page: per_page)
       render_index
     end
 
@@ -140,7 +140,7 @@ module SimpleController
       end
 
       def index_resources
-        index_query(default_resources)
+        index_query(default_resources).ransack(params[:q]).result.distinct
       end
 
       def default_resources
