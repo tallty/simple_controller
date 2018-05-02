@@ -55,8 +55,13 @@ module SimpleController
     # before_action :set_resource, only: [:show, :update, :destroy]
     
     # if you set :before_action at the same method again, you would rewrite the old condition ( :except or :only )
-    # so if you wand to add an collection action, you need to set the callback again
-    before_action :set_resource, except: [:index, :create]
+    # 1. 允许直接重写 :set_resource 能改变原 callback
+    # 2. 设置 before_action 时，可直接使用 :set_resource, 且避免覆盖条件
+    # if you would add a new member action :
+    #
+    #   you should set before_action :set_resource, only: :your_action_name
+    #
+    before_action :_set_resource, only: [:show, :update, :destroy]
     
     respond_to :json
     
@@ -155,6 +160,10 @@ module SimpleController
         @resource = default_resources.find(params[:id])
       end
       
+      def _set_resource
+        set_resource
+      end
+
       def try_parents resources
         self.class.parents.reduce(resources) { |relation, key_and_val| 
           param_key, val = key_and_val
