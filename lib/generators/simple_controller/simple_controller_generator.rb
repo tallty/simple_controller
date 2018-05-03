@@ -52,6 +52,10 @@ class SimpleControllerGenerator < Rails::Generators::NamedBase
     options.auth&.camelcase if options.auth.present?
   end
 
+  def auth_singular
+    options.auth
+  end
+
   def response_status action
     case action
     when 'get'
