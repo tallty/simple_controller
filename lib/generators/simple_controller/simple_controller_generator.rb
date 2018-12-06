@@ -6,19 +6,26 @@ class SimpleControllerGenerator < Rails::Generators::NamedBase
   class_option :view, type: :string, desc: "View files generate folder"
   class_option :model, type: :string, desc: "Model name for extract attributes"
   class_option :auth, type: :string, desc: "Authentication model name"
+  class_option 'auth-only', type: :boolean, desc: "Only generate authentication"
   class_option 'no-swagger', type: :boolean, desc: "Do not generate swagger spec file"
 
   def setup
+    return if options["auth-only"]
     @routes = RSpec::Rails::Swagger::RouteParser.new(controller_path.sub(/^\//, '')).routes
     p "Warning!! Resource is not exist, CHECK & regenerate after you have configurate the model and routes already" if resource_class&.columns_hash.blank?
   end
 
   def create_controller_files
-    template_file = "controllers/controller.rb"
+    if options["auth-only"]
+      template_file = "controllers/auth_controller.rb"
+    else
+      template_file = "controllers/controller.rb"
+    end
     template template_file, File.join("app/controllers", controller_class_path, "#{controller_file_name}_controller.rb")
   end
 
   def copy_view_files
+    return if options["auth-only"]
     %w(index show _single _simple _detail).each do |view|
       filename = filename_with_extensions(view)
       template "views/#{filename}", File.join('app/views', view_path, filename)
@@ -27,7 +34,11 @@ class SimpleControllerGenerator < Rails::Generators::NamedBase
 
   def create_swagger_files
     return if options["no-swagger"]
-    template_file = "specs/spec.rb"
+    if options["auth-only"]
+      template_file = "specs/auth_spec.rb"
+    else
+      template_file = "specs/spec.rb"
+    end
     template template_file, File.join("spec/requests", controller_class_path, "#{controller_file_name}_spec.rb")
   end
 

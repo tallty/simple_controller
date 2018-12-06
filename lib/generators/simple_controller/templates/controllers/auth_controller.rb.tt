@@ -1,0 +1,5 @@
+class <%= controller_class_name %>Controller < ApplicationController
+<% if auth.present? %>
+  acts_as_auth_session :<%= auth.downcase %>
+<% end -%>
+end

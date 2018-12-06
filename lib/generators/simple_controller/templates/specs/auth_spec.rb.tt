@@ -1,0 +1,53 @@
+require 'swagger_helper'
+
+RSpec.describe '<%= controller_path %>', type: :request, capture_examples: true, tags: ["<%= controller_class_path.join(' ') %>"] do
+
+  before :each do
+<% if auth.present? -%>
+    @<%= auth_singular %> = <%= auth %>.register "auth", "password"
+    @auth_token = <%= auth %>.login "auth", "password"
+<% end -%>
+  end
+
+  path '/auth/<%= auth_singular %>/session' do
+    delete(summary: 'logout') do
+      produces 'application/json'
+      consumes 'application/json'
+
+      parameter '<%= auth %>-Token', in: :header, type: :string
+      let('<%= auth %>-Token') { @auth_token.token }
+
+      response(200, description: 'successful') do
+        it {
+          body = JSON.parse(response.body)
+          expect(body['message']).to eq('logout successful')
+        }
+      end
+    end
+
+    post(summary: 'login') do
+      produces 'application/json'
+      consumes 'application/json'
+      parameter :<%= auth_singular %>, in: :body, schema: {
+        type: :object, properties: {
+          <%= auth_singular %>: {
+            type: :object, properties: {
+              name: { type: :string },
+              password: { type: :string },
+            }
+          }
+        }
+      }
+      response(200, description: 'successful') do
+        let(:<%= auth_singular %>) {
+          {
+            <%= auth_singular %>: {
+              name: "auth",
+              password: "password",
+            }
+          }
+        }
+      end
+    end
+  end
+end
