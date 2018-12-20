@@ -62,4 +62,18 @@ class SimpleController::BaseController < ::InheritedResources::Base
       ransack_paginate(after_association_chain(end_of_association_chain))
     )
   end
+
+  def permitted_params
+    action_resource_params_method_name = "#{params[:action]}_#{resource_params_method_name}"
+    respond_to?(action_resource_params_method_name, true) ?
+      {resource_request_name => send(action_resource_params_method_name)} :
+      {resource_request_name => send(resource_params_method_name)}
+  rescue ActionController::ParameterMissing
+    # typically :new action
+    if params[:action].to_s == 'new'
+      {resource_request_name => {}}
+    else
+      raise
+    end
+  end
 end
