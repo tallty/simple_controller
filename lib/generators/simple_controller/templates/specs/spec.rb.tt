@@ -29,7 +29,7 @@ RSpec.describe '<%= controller_path %>', type: :request, capture_examples: true,
   path '<%= template %>' do
 <% if auth.present? -%>
     parameter '<%= auth %>-Token', in: :header ,type: :string
-    let('<%= auth %>-Token') { @auth_token.token }
+    let('<%= auth %>-Token') { @<%= auth_singular %>_token.token }
 <% end -%>
 <% unless path_item[:params].empty? -%>
 <% path_item[:params].each do |param| -%>
