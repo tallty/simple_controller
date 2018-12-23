@@ -19,7 +19,7 @@ RSpec.describe '<%= controller_path %>', type: :request, capture_examples: true,
   before :each do
 <% if auth.present? -%>
     @<%= auth_singular %> = <%= auth %>.register "<%= auth_singular %>", "password"
-    @"<%= auth_singular %>"_token = <%= auth %>.login "<%= auth_singular %>", "password"
+    @<%= auth_singular %>_token = <%= auth %>.login "<%= auth_singular %>", "password"
 <% end -%>
     @<%= resource_singular %>_count = 5
     @<%= resource_plural %> = FactoryBot.create_list(:<%= resource_singular %>, @<%= resource_singular %>_count)
