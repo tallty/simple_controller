@@ -5,11 +5,11 @@ RSpec.describe '<%= controller_path %>', type: :request, capture_examples: true,
     type: :object, properties: {
       <%= resource_singular %>: {
         type: :object, properties: {
-  <% if resource_class&.columns_hash.present? -%>
-  <% resource_class.columns_hash.except('id', 'created_at', 'updated_at').values.each do |column| -%>
-          <%= column.name %>: { type: :<%= column.type %>, description: '' },
-  <% end -%>
-  <% end -%>
+  <%- if resource_class&.columns_hash.present? -%>
+  <%- resource_class.columns_hash.except('id', 'created_at', 'updated_at').values.each do |column| -%>
+          <%= column.name %>: { type: :<%= column.type %>, description: '<%= column&.comment %>' },
+  <%- end -%>
+  <%- end -%>
         }
       }
     }
@@ -18,11 +18,11 @@ RSpec.describe '<%= controller_path %>', type: :request, capture_examples: true,
 
   before :each do
 <% if auth.present? -%>
-    @<%= auth_singular %> = <%= auth %>.register "auth", "password"
-    @auth_token = <%= auth %>.login "auth", "password"
+    @<%= auth_singular %> = <%= auth %>.register "<%= auth_singular %>", "password"
+    @"<%= auth_singular %>"_token = <%= auth %>.login "<%= auth_singular %>", "password"
 <% end -%>
-    @entity_count = 5
-    @<%= resource_plural %> = FactoryBot.create_list(:<%= resource_singular %>, @entity_count)
+    @<%= resource_singular %>_count = 5
+    @<%= resource_plural %> = FactoryBot.create_list(:<%= resource_singular %>, @<%= resource_singular %>_count)
   end
 
 <% @routes.each do | template, path_item | -%>
@@ -69,11 +69,11 @@ resource_singular %>_ref
 <% elsif details[:summary].start_with?("list") -%>
         it {
           body = JSON.parse(response.body)
-          expect(body['<%= resource_plural %>'].count).to eq @entity_count
+          expect(body['<%= resource_plural %>'].count).to eq @<%= resource_singular %>_count
         }
 <% elsif details[:summary].start_with?("delete") -%>
         it {
-          expect(<%= resource_class %>.count).to eq(@entity_count-1)
+          expect(<%= resource_class %>.count).to eq(@<%= resource_singular %>_count-1)
         }
 <% elsif details[:summary].start_with?("show") -%>
         it {
