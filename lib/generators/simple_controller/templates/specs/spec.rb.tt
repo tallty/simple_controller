@@ -5,8 +5,9 @@ RSpec.describe '<%= controller_path %>', type: :request, capture_examples: true,
     type: :object, properties: {
       <%= resource_singular %>: {
         type: :object, properties: {
-  <%- if resource_class.respond_to?(:columns_hash) && resource_class&.columns_hash.present? -%>
-  <%- resource_class.respond_to?(:columns_hash) && resource_class.columns_hash.except('id', 'created_at', 'updated_at').values.each do |column| -%>
+  <%- column_hash = resource_class.columns_hash rescue [] -%>
+  <%- if columns_hash.present? -%>
+  <%- resource_class.columns_hash.except('id', 'created_at', 'updated_at').values.each do |column| -%>
           <%= column.name %>: { type: :<%= column.type %>, description: '<%= column&.comment %>' },
   <%- end -%>
   <%- end -%>
