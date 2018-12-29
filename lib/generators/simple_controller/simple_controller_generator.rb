@@ -149,6 +149,8 @@ class SimpleControllerGenerator < Rails::Generators::NamedBase
       resource_class.columns.map(&:name) - %w(id created_at updated_at)
     rescue NameError
       []
+    rescue
+      []
     end
   end
 
