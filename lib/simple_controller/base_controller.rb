@@ -2,15 +2,30 @@ class SimpleController::BaseController < ::InheritedResources::Base
   respond_to :json
 
   def index
-    index!( { template: "#{self.class.view_path}/index" } )
+    index!
   end
 
   def show
-    show!( { template: "#{self.class.view_path}/show" } )
+    show!
   end
 
   def create
-    create!( { template: "#{self.class.view_path}/show", status: 201 } )
+    create!
+  end
+
+  def index!(options={}, &block)
+    options = { template: "#{self.class.view_path}/index" }.merge options
+    super(options, &block)
+  end
+
+  def show!(options={}, &block)
+    options = { template: "#{self.class.view_path}/show" }.merge options
+    super(options, &block)
+  end
+
+  def create!(options={}, &block)
+    options = { template: "#{self.class.view_path}/show", status: 201 }.merge options
+    super(options, &block)
   end
 
   protected
