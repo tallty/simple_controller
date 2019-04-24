@@ -67,7 +67,7 @@ class SimpleController::BaseController < ::InheritedResources::Base
   def ransack_paginate(association)
     association.ransack(
       params[:q]
-    ).result.paginate(
+    ).result.distinct.paginate(
       page: params[:page], per_page: params[:per_page]
     )
   end
