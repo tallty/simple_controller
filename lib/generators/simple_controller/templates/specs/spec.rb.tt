@@ -36,16 +36,8 @@ RSpec.describe '<%= controller_path %>', type: :request, capture_examples: true,
 <% path_item[:params].each do |param| -%>
     parameter '<%= param %>', in: :path, type: :string
 <% end -%>
-<% path_item[:params].each do |param| -%>
-<% if param == 'id' -%>
-    let(:<%= param %>) { @<%= resource_plural %>.first.id }
-<% elsif param.end_with? '_id' -%>
-<%  model_name = param.sub('_id', '') -%>
-    let(:<%= param %>) { @<%= model_name %>.id }
-<% end -%>
 <% end -%>
 
-<% end -%>
 <% path_item[:actions].each do | action, details | -%>
 <% next if action == 'put' -%>
     <%= action %>(summary: '<%= details[:summary] %>') do
@@ -55,11 +47,21 @@ RSpec.describe '<%= controller_path %>', type: :request, capture_examples: true,
 <% if ['post', 'patch'].include? action -%>
       parameter :<%= resource_singular %>, in: :body, schema: <%=
 resource_singular %>_ref
+<% end -%>
+      response(<%= response_status action %>, description: 'successful') do
+<% path_item[:params].each do |param| -%>
+<% if param == 'id' -%>
+    let(:<%= param %>) { @<%= resource_plural %>.first.id }
+<% elsif param.end_with? '_id' -%>
+<%  model_name = param.sub('_id', '') -%>
+    let(:<%= param %>) { @<%= model_name %>.id }
+<% end -%>
+<% end -%>
+<% if ['post', 'patch'].include? action -%>
       let(:<%= resource_singular %>) do
         { <%= resource_singular %>: <%= resource_singular %>_value }
       end
 <% end -%>
-      response(<%= response_status action %>, description: 'successful') do
 <% if details[:summary].start_with?("create") -%>
         it {
           body = JSON.parse(response.body)
