@@ -37,7 +37,6 @@ RSpec.describe '<%= controller_path %>', type: :request, capture_examples: true,
     parameter '<%= param %>', in: :path, type: :string
 <% end -%>
 <% end -%>
-
 <% path_item[:actions].each do | action, details | -%>
 <% next if action == 'put' -%>
     <%= action %>(summary: '<%= details[:summary] %>') do
@@ -51,16 +50,16 @@ resource_singular %>_ref
       response(<%= response_status action %>, description: 'successful') do
 <% path_item[:params].each do |param| -%>
 <% if param == 'id' -%>
-    let(:<%= param %>) { @<%= resource_plural %>.first.id }
+        let(:<%= param %>) { @<%= resource_plural %>.first.id }
 <% elsif param.end_with? '_id' -%>
 <%  model_name = param.sub('_id', '') -%>
-    let(:<%= param %>) { @<%= model_name %>.id }
+        let(:<%= param %>) { @<%= model_name %>.id }
 <% end -%>
 <% end -%>
 <% if ['post', 'patch'].include? action -%>
-      let(:<%= resource_singular %>) do
-        { <%= resource_singular %>: <%= resource_singular %>_value }
-      end
+        let(:<%= resource_singular %>) do
+          { <%= resource_singular %>: <%= resource_singular %>_value }
+        end
 <% end -%>
 <% if details[:summary].start_with?("create") -%>
         it {
