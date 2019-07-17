@@ -25,8 +25,8 @@ RSpec.describe '<%= controller_path %>', type: :request, capture_examples: true,
     @<%= resource_singular %>_count = 5
     @<%= resource_plural %> = FactoryBot.create_list(:<%= resource_singular %>, @<%= resource_singular %>_count)
   end
-
 <% @routes.each do | template, path_item | -%>
+
   path '<%= template %>' do
 <% if auth.present? -%>
     parameter '<%= auth %>-Token', in: :header ,type: :string
