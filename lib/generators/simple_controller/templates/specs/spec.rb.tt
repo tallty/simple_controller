@@ -39,10 +39,10 @@ RSpec.describe '<%= controller_path %>', type: :request, capture_examples: true,
 <% end -%>
 <% path_item[:actions].each do | action, details | -%>
 <% next if action == 'put' -%>
+
     <%= action %>(summary: '<%= details[:summary] %>') do
       produces 'application/json'
       consumes 'application/json'
-
 <% if ['post', 'patch'].include? action -%>
       parameter :<%= resource_singular %>, in: :body, schema: <%=
 resource_singular %>_ref
