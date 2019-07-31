@@ -133,11 +133,11 @@ class SimpleControllerGenerator < Rails::Generators::NamedBase
   end
 
   def resource_plural
-    resource_class&.model_name&.plural
+    options.resource&.pluralize || resource_class&.model_name&.plural
   end
 
   def resource_singular
-    resource_class&.model_name&.singular
+    options.resource&.singularize || resource_class&.model_name&.singular
   end
 
   def resource_collection
