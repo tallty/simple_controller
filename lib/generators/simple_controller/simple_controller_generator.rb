@@ -5,6 +5,7 @@ class SimpleControllerGenerator < Rails::Generators::NamedBase
 
   class_option :view, type: :string, desc: "View files generate folder"
   class_option :model, type: :string, desc: "Model name for extract attributes"
+  class_option :resource, type: :string, desc: "Resource name for var name(plural or singular)"
   class_option :auth, type: :string, desc: "Authentication model name"
   class_option 'auth-only', type: :boolean, desc: "Only generate authentication"
   class_option 'no-swagger', type: :boolean, desc: "Do not generate swagger spec file"
