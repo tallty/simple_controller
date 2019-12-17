@@ -15,15 +15,15 @@ RSpec.describe '<%= controller_path %>', type: :request, capture_examples: true,
       }
     }
   }
-  <%= resource_singular %>_value = FactoryBot.attributes_for(:<%= resource_singular %>)
+  <%= resource_singular %>_value = FactoryBot.attributes_for(:<%= resource_model_singular %>)
 
   before :each do
 <% if auth.present? -%>
     @<%= auth_singular %> = <%= auth %>.register "<%= auth_singular %>", "password"
     @<%= auth_singular %>_token = <%= auth %>.login "<%= auth_singular %>", "password"
 <% end -%>
-    @<%= resource_singular %>_count = 5
-    @<%= resource_plural %> = FactoryBot.create_list(:<%= resource_singular %>, @<%= resource_singular %>_count)
+    @<%= resource_model_singular %>_count = 5
+    @<%= resource_model_plural %> = FactoryBot.create_list(:<%= resource_model_singular %>, @<%= resource_model_singular %>_count)
   end
 <% @routes.each do | template, path_item | -%>
 
@@ -50,7 +50,7 @@ resource_singular %>_ref
       response(<%= response_status action %>, description: 'successful') do
 <% path_item[:params].each do |param| -%>
 <% if param == 'id' -%>
-        let(:<%= param %>) { @<%= resource_plural %>.first.id }
+        let(:<%= param %>) { @<%= resource_model_plural %>.first.id }
 <% elsif param.end_with? '_id' -%>
 <%  model_name = param.sub('_id', '') -%>
         let(:<%= param %>) { @<%= model_name %>.id }
@@ -71,16 +71,16 @@ resource_singular %>_ref
 <% elsif details[:summary].start_with?("list") -%>
         it {
           body = JSON.parse(response.body)
-          expect(body['<%= resource_plural %>'].count).to eq @<%= resource_singular %>_count
+          expect(body['<%= resource_plural %>'].count).to eq @<%= resource_model_singular %>_count
         }
 <% elsif details[:summary].start_with?("delete") -%>
         it {
-          expect(<%= resource_class %>.count).to eq(@<%= resource_singular %>_count-1)
+          expect(<%= resource_class %>.count).to eq(@<%= resource_model_singular %>_count-1)
         }
 <% elsif details[:summary].start_with?("show") -%>
         it {
           body = JSON.parse(response.body)
-          <%= resource_singular %> = @<%= resource_plural %>.first
+          <%= resource_singular %> = @<%= resource_model_plural %>.first
 <% attributes_names.each do |attr| -%>
           expect(body['<%= attr %>']).to eq <%= resource_singular %>.<%= attr %>
 <% end -%>

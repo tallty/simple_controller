@@ -141,6 +141,14 @@ class SimpleControllerGenerator < Rails::Generators::NamedBase
     options.resource&.singularize || resource_class&.model_name&.element&.singularize
   end
 
+  def resource_model_plural
+    resource_class&.model_name&.plural
+  end
+
+  def resource_model_singular
+    resource_class&.model_name&.singular
+  end
+
   def resource_collection
     resource_class&.model_name&.collection
   end
