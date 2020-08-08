@@ -71,7 +71,7 @@ resource_singular %>_ref
 <% elsif details[:summary].start_with?("list") -%>
         it {
           body = JSON.parse(response.body)
-          expect(body['<%= resource_plural %>'].count).to eq @<%= resource_model_singular %>_count
+          expect(body['records'].count).to eq @<%= resource_model_singular %>_count
         }
 <% elsif details[:summary].start_with?("delete") -%>
         it {
