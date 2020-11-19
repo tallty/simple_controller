@@ -28,6 +28,17 @@ class SimpleController::BaseController < ::InheritedResources::Base
     super(options, &block)
   end
 
+  def import
+    xlsx_file = params[:file]
+    response = import_class.import_xlsx xlsx_file, collection, params.to_unsafe_h
+    render json: response, status: 201
+  end
+
+  def export
+    url = export_class.export_xlsx collection, params.to_unsafe_h
+    render json: { url: url }, status: 201
+  end
+
   protected
 
   class << self
@@ -42,6 +53,11 @@ class SimpleController::BaseController < ::InheritedResources::Base
 
       set_view_path view_path if view_path.present?
       super(options)
+
+      self.class_attribute :import_class, instance_writer: false unless self.respond_to? :import_class
+      self.class_attribute :export_class, instance_writer: false unless self.respond_to? :export_class
+      self.import_class = options.delete(:import_class) || self.resource_class
+      self.export_class = options.delete(:export_class) || self.resource_class
     end
 
     def set_view_path path
