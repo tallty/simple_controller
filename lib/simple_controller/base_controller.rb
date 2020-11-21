@@ -40,7 +40,7 @@ class SimpleController::BaseController < ::InheritedResources::Base
     render json: {
       current_page: pagination.current_page,
       total_pages: pagination.total_pages,
-      total_count: pagination.total_count,
+      total_count: pagination.count,
       titles: excel.titles,
       records: pagination,
     }
