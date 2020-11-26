@@ -57,6 +57,14 @@ class SimpleController::BaseController < ::InheritedResources::Base
     render json: { url: url }, status: 201
   end
 
+  def batch_destroy
+    collection.transaction do
+      params[:ids].each do |id|
+        collection.find(id).destroy!
+      end
+    end
+  end
+
   protected
 
   class << self
