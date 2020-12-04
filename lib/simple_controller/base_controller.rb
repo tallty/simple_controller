@@ -29,13 +29,13 @@ class SimpleController::BaseController < ::InheritedResources::Base
   end
 
   def upload_excel
-    excel = import_class.import_excel_klass.new
+    excel = importable_class.import_excel_klass.new
     excel.load(params[:file])
     render json: { uid: excel.uid }
   end
 
   def excel
-    excel = import_class.import_excel_klass.new(params[:uid])
+    excel = importable_class.import_excel_klass.new(params[:uid])
     pagination = excel.records_pagination(page: params[:page] || 1, per_page: params[:per_page] || 15)
     render json: {
       current_page: pagination.current_page,
@@ -47,13 +47,13 @@ class SimpleController::BaseController < ::InheritedResources::Base
   end
 
   def import
-    xlsx_file = params[:file] || import_class.import_excel_klass.new(params[:uid])
-    response = import_class.import_xlsx(xlsx_file, collection, **params.to_unsafe_h)
+    xlsx_file = params[:file] || importable_class.import_excel_klass.new(params[:uid])
+    response = importable_class.import_xlsx(xlsx_file, collection, **params.to_unsafe_h)
     render json: response, status: 201
   end
 
   def export
-    url = export_class.export_xlsx collection, params.to_unsafe_h
+    url = exportable_class.export_xlsx collection, params.to_unsafe_h
     render json: { url: url }, status: 201
   end
 
