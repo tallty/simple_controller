@@ -80,10 +80,10 @@ class SimpleController::BaseController < ::InheritedResources::Base
       set_view_path view_path if view_path.present?
       super(options)
 
-      self.class_attribute :import_class, instance_writer: false unless self.respond_to? :import_class
-      self.class_attribute :export_class, instance_writer: false unless self.respond_to? :export_class
-      self.import_class = options.delete(:import_class) || self.resource_class
-      self.export_class = options.delete(:export_class) || self.resource_class
+      self.class_attribute :importable_class, instance_writer: false unless self.respond_to? :importable_class
+      self.class_attribute :exportable_class, instance_writer: false unless self.respond_to? :exportable_class
+      self.importable_class = options.delete(:importable_class) || self.resource_class
+      self.exportable_class = options.delete(:exportable_class) || self.resource_class
     end
 
     def set_view_path path
