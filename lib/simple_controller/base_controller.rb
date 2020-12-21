@@ -65,6 +65,50 @@ class SimpleController::BaseController < ::InheritedResources::Base
     end
   end
 
+  def batch_create
+    success_count = 0
+    error_count = 0
+    if params[:transition]
+      collection.transition do
+        batch_create_params.each do |create_params|
+          collection.create! create_params
+          success_count += 1
+        end
+      end
+    else
+      batch_create_params.each do |create_params|
+        begin
+          collection.create! create_params
+          success_count += 1
+        rescue
+          error_count += 1
+        end
+      end
+    end
+    render json: { success_count: success_count, error_count: error_count }, status: 201
+  end
+
+  def batch_update
+    success_count = 0
+    error_count = 0
+    if params[:transition]
+      collection.transition do
+        collection.where(id: params[:ids]).update! permitted_params
+      end
+      success_count = collection.count
+    else
+      collection.where(id: params[:ids]).find_each do |_recourse|
+        begin
+          _recourse.update! permitted_params
+          success_count += 1
+        rescue
+          error_count += 1
+        end
+      end
+    end
+    render json: { success_count: success_count, error_count: error_count }, status: 201
+  end
+
   protected
 
   class << self
