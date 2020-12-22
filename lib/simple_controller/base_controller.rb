@@ -93,13 +93,13 @@ class SimpleController::BaseController < ::InheritedResources::Base
     error_count = 0
     if params[:transition]
       collection.transition do
-        collection.where(id: params[:ids]).update! permitted_params
+        collection.where(id: params[:ids]).update! permitted_params[resource_request_name]
       end
       success_count = collection.count
     else
       collection.where(id: params[:ids]).find_each do |_recourse|
         begin
-          _recourse.update! permitted_params
+          _recourse.update! permitted_params[resource_request_name]
           success_count += 1
         rescue
           error_count += 1
