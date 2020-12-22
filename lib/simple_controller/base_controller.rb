@@ -70,15 +70,15 @@ class SimpleController::BaseController < ::InheritedResources::Base
     error_count = 0
     if params[:transition]
       collection.transition do
-        batch_create_params.each do |create_params|
-          collection.create! create_params
+        batch_create_params.each do |resource_params|
+          collection.create! resource_params
           success_count += 1
         end
       end
     else
-      batch_create_params.each do |create_params|
+      batch_create_params.each do |resource_params|
         begin
-          collection.create! create_params
+          collection.create! resource_params
           success_count += 1
         rescue
           error_count += 1
@@ -93,13 +93,13 @@ class SimpleController::BaseController < ::InheritedResources::Base
     error_count = 0
     if params[:transition]
       collection.transition do
-        collection.where(id: params[:ids]).update! permitted_params[resource_request_name]
+        collection.where(id: params[:ids]).update! resource_params
       end
       success_count = collection.count
     else
       collection.where(id: params[:ids]).find_each do |_recourse|
         begin
-          _recourse.update! permitted_params[resource_request_name]
+          _recourse.update! resource_params
           success_count += 1
         rescue
           error_count += 1
