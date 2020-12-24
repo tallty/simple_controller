@@ -53,7 +53,7 @@ class SimpleController::BaseController < ::InheritedResources::Base
   end
 
   def export
-    url = exportable_class.export_xlsx collection, params.to_unsafe_h
+    url = exportable_class.export_xlsx collection, **params.to_unsafe_h
     render json: { url: url }, status: 201
   end
 
