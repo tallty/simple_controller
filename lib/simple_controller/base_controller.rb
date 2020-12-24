@@ -48,12 +48,12 @@ class SimpleController::BaseController < ::InheritedResources::Base
 
   def import
     xlsx_file = params[:file] || importable_class.import_excel_klass.new(params[:uid])
-    response = importable_class.import_xlsx(xlsx_file, collection, **params.to_unsafe_h)
+    response = importable_class.import_xlsx(xlsx_file, collection, **params.to_unsafe_h.symbolize_keys)
     render json: response, status: 201
   end
 
   def export
-    url = exportable_class.export_xlsx collection, **params.to_unsafe_h
+    url = exportable_class.export_xlsx collection, **params.to_unsafe_h.symbolize_keys
     render json: { url: url }, status: 201
   end
 
