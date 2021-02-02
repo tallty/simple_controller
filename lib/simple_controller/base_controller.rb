@@ -56,6 +56,10 @@ class SimpleController::BaseController < ::InheritedResources::Base
     render json: response, status: 201
   end
 
+  def export_headers
+    render json: { headers: exportable_class.export_instance.export_headers }
+  end
+
   def export
     url = exportable_class.export_xlsx collection, **params.to_unsafe_h.symbolize_keys
     render json: { url: url }, status: 201
