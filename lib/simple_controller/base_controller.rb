@@ -46,10 +46,18 @@ class SimpleController::BaseController < ::InheritedResources::Base
     }
   end
 
+  def import_headers
+    render json: { headers: importable_class.import_instance.import_headers }
+  end
+
   def import
     xlsx_file = params[:file] || importable_class.import_excel_klass.new(params[:uid])
     response = importable_class.import_xlsx(xlsx_file, collection, **params.to_unsafe_h.symbolize_keys)
     render json: response, status: 201
+  end
+
+  def export_headers
+    render json: { headers: exportable_class.export_instance.export_headers }
   end
 
   def export
